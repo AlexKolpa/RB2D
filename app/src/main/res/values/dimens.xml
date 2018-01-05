@@ -1,3 +1,5 @@
 <resources>
+	<dimen name="overview_item_lint_height">24dp</dimen>
 	<dimen name="fab_margin">16dp</dimen>
+	<dimen name="small_spacing">4dp</dimen>
 </resources>
