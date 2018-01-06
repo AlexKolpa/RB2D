@@ -2,6 +2,7 @@ package com.github.alexkolpa.rb2d.data;
 
 import io.reactivex.FlowableTransformer;
 import io.reactivex.ObservableTransformer;
+import io.reactivex.SingleTransformer;
 import lombok.AccessLevel;
 import lombok.Getter;
 

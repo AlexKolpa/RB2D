@@ -1,4 +1,8 @@
 <resources>
 	<string name="app_name">RB2D</string>
-	<string name="action_settings">Settings</string>
+    <string name="sources">Sources</string>
+    <string name="sources_numbered">Sources (%1$d)</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+    <string name="all_sources">All</string>
 </resources>
