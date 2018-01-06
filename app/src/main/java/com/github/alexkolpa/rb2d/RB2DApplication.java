@@ -2,25 +2,38 @@ package com.github.alexkolpa.rb2d;
 
 import android.app.Application;
 import com.github.alexkolpa.rb2d.di.AppModule;
-import com.github.alexkolpa.rb2d.di.DaggerNetComponent;
-import com.github.alexkolpa.rb2d.di.NetComponent;
+import com.github.alexkolpa.rb2d.di.DaggerOverviewComponent;
+import com.github.alexkolpa.rb2d.di.DaggerSourceComponent;
+import com.github.alexkolpa.rb2d.di.OverviewComponent;
 import com.github.alexkolpa.rb2d.di.NetModule;
+import com.github.alexkolpa.rb2d.di.SourceComponent;
 
 public class RB2DApplication extends Application {
 	private static final String BASE_URL = "https://redditbooru.com";
-	private NetComponent netComponent;
+	private OverviewComponent overviewComponent;
+	private SourceComponent sourceComponent;
 
 	@Override
 	public void onCreate() {
 		super.onCreate();
 
-		netComponent = DaggerNetComponent.builder()
-				.appModule(new AppModule(this))
-				.netModule(new NetModule(BASE_URL))
+		AppModule appModule = new AppModule(this);
+		NetModule netModule = new NetModule(BASE_URL);
+		overviewComponent = DaggerOverviewComponent.builder()
+				.appModule(appModule)
+				.netModule(netModule)
+				.build();
+		sourceComponent = DaggerSourceComponent.builder()
+				.appModule(appModule)
+				.netModule(netModule)
 				.build();
 	}
 
-	public NetComponent getNetComponent() {
-		return netComponent;
+	public OverviewComponent getOverviewComponent() {
+		return overviewComponent;
+	}
+
+	public SourceComponent getSourceComponent() {
+		return sourceComponent;
 	}
 }

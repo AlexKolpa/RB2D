@@ -19,7 +19,7 @@ public class ImageScroller {
 	}
 
 	private static final int limit = 30;
-	private final RedditBooruService redditBooruService;
+	private final ImageService imageService;
 
 	@Getter
 	private boolean isLoading = false;
@@ -29,14 +29,14 @@ public class ImageScroller {
 	private final AtomicReference<Long> lastDate = new AtomicReference<>(null);
 
 	@Inject
-	ImageScroller(RedditBooruService redditBooruService) {
-		this.redditBooruService = redditBooruService;
+	ImageScroller(ImageService imageService) {
+		this.imageService = imageService;
 	}
 
 	public Single<ImageBatch> loadNextPage() {
 		isLoading = true;
 		Long lastDate = this.lastDate.get();
-		return redditBooruService.getImages(lastDate, limit)
+		return imageService.getImages(lastDate, limit)
 				.doOnSuccess(images -> {
 					if (images.isEmpty()) {
 						hasMoreItems = false;
@@ -48,5 +48,11 @@ public class ImageScroller {
 				})
 				.map(images -> new ImageBatch(lastDate, images))
 				.doFinally(() -> isLoading = false);
+	}
+
+	public void reset() {
+		isLoading = false;
+		hasMoreItems = true;
+		lastDate.set(null);
 	}
 }

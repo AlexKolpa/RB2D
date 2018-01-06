@@ -65,5 +65,9 @@ public class OverviewPresenter extends Presenter<OverviewView> {
 	private boolean canLoadMoreItems() {
 		return imageScroller.isHasMoreItems() && !imageScroller.isLoading();
 	}
+
+	public void clear() {
+		imageScroller.reset();
+	}
 }
 

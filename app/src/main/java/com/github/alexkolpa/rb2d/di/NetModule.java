@@ -5,7 +5,9 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.alexkolpa.rb2d.net.RedditBooruService;
+import com.github.alexkolpa.rb2d.net.ImageService;
+import com.github.alexkolpa.rb2d.net.SourceInterceptor;
+import com.github.alexkolpa.rb2d.net.SourceService;
 
 import javax.inject.Singleton;
 
@@ -23,17 +25,8 @@ public class NetModule {
 
 	String baseUrl;
 
-	// Constructor needs one parameter to instantiate.
 	public NetModule(String baseUrl) {
 		this.baseUrl = baseUrl;
-	}
-
-	// Dagger will only look for methods annotated with @Provides
-	@Provides
-	@Singleton
-	// Application reference must come from AppModule.class
-	SharedPreferences providesSharedPreferences(Application application) {
-		return PreferenceManager.getDefaultSharedPreferences(application);
 	}
 
 	@Provides
@@ -51,9 +44,10 @@ public class NetModule {
 
 	@Provides
 	@Singleton
-	OkHttpClient provideOkHttpClient(Cache cache) {
+	OkHttpClient provideOkHttpClient(Cache cache, SourceInterceptor interceptor) {
 		OkHttpClient.Builder builder = new OkHttpClient.Builder();
 		builder.cache(cache);
+		builder.addNetworkInterceptor(interceptor);
 		return builder.build();
 	}
 
@@ -70,7 +64,13 @@ public class NetModule {
 
 	@Provides
 	@Singleton
-	RedditBooruService provideRedditBooruService(Retrofit retrofit) {
-		return retrofit.create(RedditBooruService.class);
+	ImageService provideImageService(Retrofit retrofit) {
+		return retrofit.create(ImageService.class);
+	}
+
+	@Provides
+	@Singleton
+	SourceService provideSourceService(Retrofit retrofit) {
+		return retrofit.create(SourceService.class);
 	}
 }

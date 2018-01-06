@@ -7,7 +7,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -17,14 +16,17 @@ import com.github.alexkolpa.rb2d.R;
 import com.github.alexkolpa.rb2d.RB2DApplication;
 import com.github.alexkolpa.rb2d.data.OverviewPresenter;
 import com.github.alexkolpa.rb2d.data.OverviewView;
+import com.github.alexkolpa.rb2d.sources.SourceSelectorFragment;
 import com.jakewharton.rxbinding2.support.v7.widget.RecyclerViewScrollEvent;
 import com.jakewharton.rxbinding2.support.v7.widget.RxRecyclerView;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.disposables.Disposables;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class OverviewActivity extends AppCompatActivity implements OverviewView {
+public class OverviewActivity extends AppCompatActivity implements OverviewView, SourceSelectorFragment.SourceCallback {
 
 	private static final Object EVENT = new Object();
 
@@ -35,11 +37,12 @@ public class OverviewActivity extends AppCompatActivity implements OverviewView 
 
 	private GridLayoutManager layoutManager;
 	private RecyclerView overview;
+	private Disposable subscription = Disposables.disposed();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		((RB2DApplication) getApplication()).getNetComponent().inject(this);
+		((RB2DApplication) getApplication()).getOverviewComponent().inject(this);
 
 		setContentView(R.layout.activity_overview);
 		overviewPresenter.attach(this);
@@ -57,16 +60,28 @@ public class OverviewActivity extends AppCompatActivity implements OverviewView 
 		layoutManager = new GridLayoutManager(this, 2);
 		overview.setLayoutManager(layoutManager);
 
-		overviewPresenter.getImages()
-				.observeOn(AndroidSchedulers.mainThread())
-				.subscribe(galleryEntries -> overviewAdapter.addImages(galleryEntries),
-						throwable -> log.error("Couldn't retrieve gallery items", throwable));
+		loadData();
 	}
 
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
 		overviewPresenter.detach(this);
+	}
+
+	private void loadData() {
+		subscription.dispose();
+
+		subscription = overviewPresenter.getImages()
+				.observeOn(AndroidSchedulers.mainThread())
+				.subscribe(galleryEntries -> overviewAdapter.addImages(galleryEntries),
+						throwable -> log.error("Couldn't retrieve gallery items", throwable));
+	}
+
+	private void refresh() {
+		overviewAdapter.clear();
+		overviewPresenter.clear();
+		loadData();
 	}
 
 	private boolean canLoadPage(RecyclerViewScrollEvent event) {
@@ -86,7 +101,8 @@ public class OverviewActivity extends AppCompatActivity implements OverviewView 
 	public boolean onOptionsItemSelected(MenuItem item) {
 		int id = item.getItemId();
 
-		if (id == R.id.action_settings) {
+		if (id == R.id.sources) {
+			new SourceSelectorFragment().show(getFragmentManager(), "Sources");
 			return true;
 		}
 
@@ -98,5 +114,10 @@ public class OverviewActivity extends AppCompatActivity implements OverviewView 
 		return RxRecyclerView.scrollEvents(overview)
 						.filter(this::canLoadPage)
 						.map(event -> EVENT);
+	}
+
+	@Override
+	public void onSourcesSelected() {
+		refresh();
 	}
 }
