@@ -18,9 +18,18 @@ import com.github.alexkolpa.rb2d.R;
 import com.github.alexkolpa.rb2d.entity.Image;
 import com.squareup.picasso.Picasso;
 
+import lombok.Setter;
+
 public class OverviewAdapter extends RecyclerView.Adapter<OverviewAdapter.ImageViewHolder> {
 
+	public interface ImageClickListener {
+		void onClick(Image image);
+	}
+
 	private final List<Image> images = new ArrayList<>();
+
+	@Setter
+	private ImageClickListener listener;
 
 	@Inject
 	OverviewAdapter() {
@@ -34,7 +43,13 @@ public class OverviewAdapter extends RecyclerView.Adapter<OverviewAdapter.ImageV
 
 	@Override
 	public void onBindViewHolder(ImageViewHolder holder, int position) {
-		holder.bind(images.get(position));
+		Image item = images.get(position);
+		holder.itemView.setOnClickListener(v -> {
+			if(listener != null) {
+				listener.onClick(item);
+			}
+		});
+		holder.bind(item);
 	}
 
 	@Override
