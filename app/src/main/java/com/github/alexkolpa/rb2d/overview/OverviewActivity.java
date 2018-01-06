@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -44,6 +45,7 @@ public class OverviewActivity extends AppCompatActivity implements OverviewView,
 
 	private GridLayoutManager layoutManager;
 	private RecyclerView overview;
+	private SwipeRefreshLayout refreshLayout;
 	private Disposable subscription = Disposables.disposed();
 
 	@Override
@@ -68,6 +70,9 @@ public class OverviewActivity extends AppCompatActivity implements OverviewView,
 		layoutManager = new GridLayoutManager(this, 2);
 		overview.setLayoutManager(layoutManager);
 
+		refreshLayout = findViewById(R.id.refresh);
+		refreshLayout.setOnRefreshListener(this::refresh);
+
 		loadData();
 	}
 
@@ -90,7 +95,10 @@ public class OverviewActivity extends AppCompatActivity implements OverviewView,
 
 		subscription = overviewPresenter.getImages()
 				.observeOn(AndroidSchedulers.mainThread())
-				.subscribe(galleryEntries -> overviewAdapter.addImages(galleryEntries),
+				.subscribe(galleryEntries -> {
+							refreshLayout.setRefreshing(false);
+							overviewAdapter.addImages(galleryEntries);
+						},
 						throwable -> log.error("Couldn't retrieve gallery items", throwable));
 	}
 
