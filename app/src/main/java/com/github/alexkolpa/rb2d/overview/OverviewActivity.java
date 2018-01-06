@@ -5,6 +5,7 @@ import javax.inject.Inject;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,6 +13,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+
 import com.github.alexkolpa.rb2d.R;
 import com.github.alexkolpa.rb2d.RB2DApplication;
 import com.github.alexkolpa.rb2d.data.OverviewPresenter;
@@ -19,6 +21,7 @@ import com.github.alexkolpa.rb2d.data.OverviewView;
 import com.github.alexkolpa.rb2d.sources.SourceSelectorFragment;
 import com.jakewharton.rxbinding2.support.v7.widget.RecyclerViewScrollEvent;
 import com.jakewharton.rxbinding2.support.v7.widget.RxRecyclerView;
+
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -37,6 +40,7 @@ public class OverviewActivity extends AppCompatActivity implements OverviewView,
 
 	private GridLayoutManager layoutManager;
 	private RecyclerView overview;
+	private SwipeRefreshLayout refreshLayout;
 	private Disposable subscription = Disposables.disposed();
 
 	@Override
@@ -60,6 +64,9 @@ public class OverviewActivity extends AppCompatActivity implements OverviewView,
 		layoutManager = new GridLayoutManager(this, 2);
 		overview.setLayoutManager(layoutManager);
 
+		refreshLayout = findViewById(R.id.refresh);
+		refreshLayout.setOnRefreshListener(this::refresh);
+
 		loadData();
 	}
 
@@ -74,7 +81,10 @@ public class OverviewActivity extends AppCompatActivity implements OverviewView,
 
 		subscription = overviewPresenter.getImages()
 				.observeOn(AndroidSchedulers.mainThread())
-				.subscribe(galleryEntries -> overviewAdapter.addImages(galleryEntries),
+				.subscribe(galleryEntries -> {
+							refreshLayout.setRefreshing(false);
+							overviewAdapter.addImages(galleryEntries);
+						},
 						throwable -> log.error("Couldn't retrieve gallery items", throwable));
 	}
 
@@ -112,8 +122,8 @@ public class OverviewActivity extends AppCompatActivity implements OverviewView,
 	@Override
 	public Observable<Object> getPageEvents() {
 		return RxRecyclerView.scrollEvents(overview)
-						.filter(this::canLoadPage)
-						.map(event -> EVENT);
+				.filter(this::canLoadPage)
+				.map(event -> EVENT);
 	}
 
 	@Override
