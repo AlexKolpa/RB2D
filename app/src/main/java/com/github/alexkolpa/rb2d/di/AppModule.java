@@ -3,6 +3,7 @@ package com.github.alexkolpa.rb2d.di;
 import javax.inject.Singleton;
 
 import android.app.Application;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
@@ -12,7 +13,7 @@ import dagger.Provides;
 @Module
 public class AppModule {
 
-	Application application;
+	private final Application application;
 
 	public AppModule(Application application) {
 		this.application = application;
@@ -21,6 +22,12 @@ public class AppModule {
 	@Provides
 	@Singleton
 	Application providesApplication() {
+		return application;
+	}
+
+	@Provides
+	@Singleton
+	Context providesContext() {
 		return application;
 	}
 

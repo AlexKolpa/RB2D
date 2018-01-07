@@ -1,11 +1,11 @@
 package com.github.alexkolpa.rb2d.di;
 
 import android.app.Application;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.alexkolpa.rb2d.net.ImageService;
+import com.github.alexkolpa.rb2d.net.RehostService;
 import com.github.alexkolpa.rb2d.net.SourceInterceptor;
 import com.github.alexkolpa.rb2d.net.SourceService;
 
@@ -39,7 +39,9 @@ public class NetModule {
 	@Provides
 	@Singleton
 	ObjectMapper provideJackson() {
-		return new ObjectMapper();
+		ObjectMapper objectMapper = new ObjectMapper();
+		objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+		return objectMapper;
 	}
 
 	@Provides
@@ -72,5 +74,11 @@ public class NetModule {
 	@Singleton
 	SourceService provideSourceService(Retrofit retrofit) {
 		return retrofit.create(SourceService.class);
+	}
+
+	@Provides
+	@Singleton
+	RehostService provideRehostService(Retrofit retrofit) {
+		return retrofit.create(RehostService.class);
 	}
 }

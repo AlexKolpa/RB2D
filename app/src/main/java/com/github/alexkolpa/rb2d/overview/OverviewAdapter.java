@@ -89,7 +89,7 @@ public class OverviewAdapter extends RecyclerView.Adapter<OverviewAdapter.ImageV
 
 		private void loadImage(Image item) {
 			Picasso.with(image.getContext())
-					.load(item.getThumb(300, 300))
+					.load(Image.getThumb(item.getThumb(), 300, 300))
 					.into(image);
 		}
 	}

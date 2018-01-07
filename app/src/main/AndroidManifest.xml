@@ -21,6 +21,46 @@
 				<category android:name="android.intent.category.LAUNCHER"/>
 			</intent-filter>
 		</activity>
+
+		<activity android:name=".rehost.RehostActivity"
+			android:label="@string/rehost_name"
+			android:windowSoftInputMode="stateHidden|adjustResize"
+			android:theme="@style/AppTheme.NoActionBar"
+			android:parentActivityName=".overview.OverviewActivity">
+			<meta-data
+				android:name="android.support.PARENT_ACTIVITY"
+				android:value=".overview.OverviewActivity"/>
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW"/>
+				<category android:name="android.intent.category.DEFAULT" />
+				<data android:mimeType="image/jpeg" />
+			</intent-filter>
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW"/>
+				<category android:name="android.intent.category.DEFAULT" />
+				<data android:mimeType="image/png"/>
+			</intent-filter>
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW"/>
+				<category android:name="android.intent.category.DEFAULT" />
+				<data android:mimeType="image/gif"/>
+			</intent-filter>
+			<intent-filter>
+				<action android:name="android.intent.action.SEND"/>
+				<category android:name="android.intent.category.DEFAULT" />
+				<data android:mimeType="image/jpeg"/>
+			</intent-filter>
+			<intent-filter>
+				<action android:name="android.intent.action.SEND"/>
+				<category android:name="android.intent.category.DEFAULT" />
+				<data android:mimeType="image/png"/>
+			</intent-filter>
+			<intent-filter>
+				<action android:name="android.intent.action.SEND"/>
+				<category android:name="android.intent.category.DEFAULT" />
+				<data android:mimeType="image/gif"/>
+			</intent-filter>
+		</activity>
 	</application>
 
 </manifest>

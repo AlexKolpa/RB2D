@@ -1,39 +1,28 @@
 package com.github.alexkolpa.rb2d;
 
 import android.app.Application;
+import android.support.v7.app.AppCompatDelegate;
+
 import com.github.alexkolpa.rb2d.di.AppModule;
-import com.github.alexkolpa.rb2d.di.DaggerOverviewComponent;
-import com.github.alexkolpa.rb2d.di.DaggerSourceComponent;
-import com.github.alexkolpa.rb2d.di.OverviewComponent;
+import com.github.alexkolpa.rb2d.di.DaggerRB2DComponent;
 import com.github.alexkolpa.rb2d.di.NetModule;
-import com.github.alexkolpa.rb2d.di.SourceComponent;
+import com.github.alexkolpa.rb2d.di.RB2DComponent;
+
+import lombok.Getter;
 
 public class RB2DApplication extends Application {
 	private static final String BASE_URL = "https://redditbooru.com";
-	private OverviewComponent overviewComponent;
-	private SourceComponent sourceComponent;
+	@Getter
+	private RB2DComponent component;
 
 	@Override
 	public void onCreate() {
 		super.onCreate();
+		AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
 
-		AppModule appModule = new AppModule(this);
-		NetModule netModule = new NetModule(BASE_URL);
-		overviewComponent = DaggerOverviewComponent.builder()
-				.appModule(appModule)
-				.netModule(netModule)
+		component = DaggerRB2DComponent.builder()
+				.appModule(new AppModule(this))
+				.netModule(new NetModule(BASE_URL))
 				.build();
-		sourceComponent = DaggerSourceComponent.builder()
-				.appModule(appModule)
-				.netModule(netModule)
-				.build();
-	}
-
-	public OverviewComponent getOverviewComponent() {
-		return overviewComponent;
-	}
-
-	public SourceComponent getSourceComponent() {
-		return sourceComponent;
 	}
 }
