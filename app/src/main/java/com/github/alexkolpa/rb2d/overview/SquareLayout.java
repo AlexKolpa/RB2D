@@ -21,7 +21,9 @@ public class SquareLayout extends FrameLayout {
 
 	@Override
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-		//noinspection SuspiciousNameCombination
-		super.onMeasure(widthMeasureSpec, widthMeasureSpec);
+		int width = MeasureSpec.getSize(widthMeasureSpec);
+		int height = MeasureSpec.getSize(heightMeasureSpec);
+		int spec = width > height ? heightMeasureSpec : widthMeasureSpec;
+		super.onMeasure(spec, spec);
 	}
 }

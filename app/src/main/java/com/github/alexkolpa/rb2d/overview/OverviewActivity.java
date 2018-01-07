@@ -21,6 +21,7 @@ import com.github.alexkolpa.rb2d.RB2DApplication;
 import com.github.alexkolpa.rb2d.data.OverviewPresenter;
 import com.github.alexkolpa.rb2d.data.OverviewView;
 import com.github.alexkolpa.rb2d.entity.Image;
+import com.github.alexkolpa.rb2d.rehost.RehostActivity;
 import com.github.alexkolpa.rb2d.sources.SourceSelectorFragment;
 import com.jakewharton.rxbinding2.support.v7.widget.RecyclerViewScrollEvent;
 import com.jakewharton.rxbinding2.support.v7.widget.RxRecyclerView;
@@ -51,7 +52,7 @@ public class OverviewActivity extends AppCompatActivity implements OverviewView,
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		((RB2DApplication) getApplication()).getOverviewComponent().inject(this);
+		((RB2DApplication) getApplication()).getComponent().inject(this);
 
 		setContentView(R.layout.activity_overview);
 		overviewPresenter.attach(this);
@@ -60,8 +61,7 @@ public class OverviewActivity extends AppCompatActivity implements OverviewView,
 		setSupportActionBar(toolbar);
 
 		FloatingActionButton fab = findViewById(R.id.fab);
-		fab.setOnClickListener((View view) -> Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-				.setAction("Action", null).show());
+		fab.setOnClickListener((View view) -> startActivity(new Intent(this, RehostActivity.class)));
 
 		overview = findViewById(R.id.overview);
 		overview.setAdapter(overviewAdapter);

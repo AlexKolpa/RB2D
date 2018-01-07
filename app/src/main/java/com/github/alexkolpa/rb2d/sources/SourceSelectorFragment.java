@@ -44,7 +44,7 @@ public class SourceSelectorFragment extends DialogFragment implements SourcesVie
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		((RB2DApplication) getActivity().getApplication()).getSourceComponent().inject(this);
+		((RB2DApplication) getActivity().getApplication()).getComponent().inject(this);
 		presenter.attach(this);
 
 		if (savedInstanceState != null) {

@@ -29,7 +29,7 @@ public class Image {
 	private Integer idxInAlbum;
 	private long age;
 
-	public String getThumb(int width, int height) {
+	public static String getThumb(String thumb, int width, int height) {
 		return String.format(FORMAT, thumb, width, height);
 	}
 }

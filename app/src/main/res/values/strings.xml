@@ -1,8 +1,21 @@
 <resources>
 	<string name="app_name">RB2D</string>
-    <string name="sources">Sources</string>
-    <string name="sources_numbered">Sources (%1$d)</string>
-    <string name="save">Save</string>
-    <string name="cancel">Cancel</string>
-    <string name="all_sources">All</string>
+	<string name="sources">Sources</string>
+	<string name="sources_numbered">Sources (%1$d)</string>
+	<string name="save">Save</string>
+	<string name="cancel">Cancel</string>
+	<string name="all_sources">All</string>
+	<string name="rehost_name">Rehost</string>
+	<string name="input_hint">image URL</string>
+	<string name="search">Search</string>
+	<string name="upload">Upload</string>
+	<string name="upload_anyway">Upload anyway</string>
+	<string name="album">Album</string>
+	<string name="done">Done</string>
+	<string name="album_title_hint">album title</string>
+	<string name="or">or</string>
+	<string name="yours">Your image</string>
+	<string name="similar">Similar images</string>
+	<string name="repost">It looks like this image may already have been posted to %1$s</string>
+	<string name="caption_hint">Image caption</string>
 </resources>
